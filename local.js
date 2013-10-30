@@ -68,3 +68,19 @@ $('#btnEnd').on('click', function() {
   }
   board.position(game.fen());
 });
+
+//key bindings
+$(document).ready(function(){
+  $(document).keydown(function(e){
+    if (e.keyCode == 39) { //right arrow
+      $('#btnNext').click();
+      return false;
+    }
+  });
+  $(document).keydown(function(e){
+    if (e.keyCode == 37) { //left arrow
+      $('#btnPrevious').click();
+      return false;
+    }
+  });
+});
