@@ -1,5 +1,5 @@
 //dummy data
-pgn =
+pgnData =
 [
   '[Event "Euro Club Cup"]',
   '[Site "Kallithea GRE"]',
@@ -20,26 +20,29 @@ pgn =
 var board,
     game,
     gameHistory,
-    currentMove
+    currentMove;
 
 //set up the game
 game = new Chess();
-game.load_pgn(pgn.join('\n'));
+game.load_pgn(pgnData.join('\n'), {newline_char:'\n'});
 
 //store the game we just loaded in memory
 gameHistory = game.history({verbose:true});
 
+//Write the game to the DOM
+//remove the header to get the moves
+var h = game.header();
+var gameHeaderText = '<h4>' + h.White + ' (' + h.WhiteElo + ') - ' + h.Black + ' (' + h.BlackElo + ')</h4>';
+gameHeaderText += '<h5>' + h.Event + ', ' + h.Site + ' ' + h.EventDate + '</h5>';
+var gameMoves = game.pgn().replace(/\[(.*?)\]/gm,"").trim();
+/*
+format the moves so each one is individually identified, so it can be highlighted
+*/
+$("#game-data").html(gameHeaderText + gameMoves);
+
 //bask to the start, we will use the gameHistory object to move through the game
 game.reset();
 currentMove = 0; //pointer to the gameHistory index of the position on the board - gameHistory[currentMove] is the next move to be made
-
-//set up the board
-var cfg = {
-  pieceTheme: '/chessboardjs/img/chesspieces/wikipedia/{piece}.png',
-  position: 'start',
-  showNotation: false
-};
-board = new ChessBoard('board', cfg);
 
 //buttons
 $('#btnStart').on('click', function() {
@@ -84,3 +87,12 @@ $(document).ready(function(){
     }
   });
 });
+
+//set up the board
+var cfg = {
+  pieceTheme: '/chessboardjs/img/chesspieces/wikipedia/{piece}.png',
+  position: 'start',
+  showNotation: false
+};
+board = new ChessBoard('board', cfg);
+// $(window).resize(board.resize);
