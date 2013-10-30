@@ -71,9 +71,9 @@ pgnData = [
   ]
 ];
 
+//Write the game to the DOM
 function writeGameText(g) {
 
-  //Write the game to the DOM
   //remove the header to get the moves
   var h = g.header();
   var gameHeaderText = '<h4>' + h.White + ' (' + h.WhiteElo + ') - ' + h.Black + ' (' + h.BlackElo + ')</h4>';
@@ -105,7 +105,7 @@ $('#btnStart').on('click', function() {
   board.position(game.fen());
 });
 $('#btnPrevious').on('click', function() {
-  if (currentPly > 0) {
+  if (currentPly >= 0) {
     game.undo();
     currentPly--;
     board.position(game.fen());
@@ -172,7 +172,6 @@ $(document).ready(function(){
           loadGame(pgnData.length - 1);
         } else {
           loadGame(currentGame + 1);
-          console.log($('gameSelect').value);
         }
       }
       $('#gameSelect').val(currentGame);
@@ -201,14 +200,6 @@ var onChange = function onChange() { //fires when the board position changes
   $('.gameMove' + currentPly).addClass('highlight');
 }
 
-//start doing stuff
-var board, //the chessboard
-    game, //the current  game
-    games, //array of all loaded games
-    gameHistory,
-    currentPly,
-    currentGame;
-
 function loadGame(i) {
   game = new Chess();
   game.load_pgn(pgnData[i].join('\n'), {newline_char:'\n'});
@@ -218,7 +209,15 @@ function loadGame(i) {
   currentGame = i;
 }
 
-//only need the headers here, raise issue on githb?
+//start doing stuff
+var board, //the chessboard
+    game, //the current  game
+    games, //array of all loaded games
+    gameHistory,
+    currentPly,
+    currentGame;
+
+//only need the headers here, issue raised on github
 //read all the games to populate the select
 for (var i = 0; i < pgnData.length; i++) {
   var g = new Chess();
@@ -239,4 +238,6 @@ var cfg = {
 };
 board = new ChessBoard('board', cfg);
 $(window).resize(board.resize);
+
+//load the first game
 loadGame(0);
