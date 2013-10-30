@@ -20,7 +20,7 @@ pgnData =
 var board,
     game,
     gameHistory,
-    currentMove;
+    currentPly;
 
 //set up the game
 game = new Chess();
@@ -34,65 +34,96 @@ gameHistory = game.history({verbose:true});
 var h = game.header();
 var gameHeaderText = '<h4>' + h.White + ' (' + h.WhiteElo + ') - ' + h.Black + ' (' + h.BlackElo + ')</h4>';
 gameHeaderText += '<h5>' + h.Event + ', ' + h.Site + ' ' + h.EventDate + '</h5>';
-var gameMoves = game.pgn().replace(/\[(.*?)\]/gm,"").trim();
-/*
-format the moves so each one is individually identified, so it can be highlighted
-*/
-$("#game-data").html(gameHeaderText + gameMoves);
+var gameMoves = game.pgn().replace(/\[(.*?)\]/gm, '').replace(h.Result, '').trim();
+
+//format the moves so each one is individually identified, so it can be highlighted
+moveArray = gameMoves.split(/([0-9]+\.\s)/).filter(function(n) {return n;});
+for (var i = 0, l = moveArray.length; i < l; ++i) {
+  var s = $.trim(moveArray[i]);
+  if (!/^[0-9]+\.$/.test(s)) { //move numbers
+    m = s.split(/\s+/);
+    for (var j = 0, ll = m.length; j < ll; ++j) {
+      m[j] = '<span class="gameMove' + (i + j - 1) + '">' + m[j] + '</span>';
+    }
+    s = m.join(' ');
+  }
+  moveArray[i] = s;
+}
+$("#game-data").html(gameHeaderText + '<div class="gameMoves">' + moveArray.join(' ') + ' <span class="gameResult">' + h.Result + '</span></div>');
 
 //bask to the start, we will use the gameHistory object to move through the game
 game.reset();
-currentMove = 0; //pointer to the gameHistory index of the position on the board - gameHistory[currentMove] is the next move to be made
+currentPly = -1; // -1 = beginning of game
 
 //buttons
 $('#btnStart').on('click', function() {
   game.reset();
+  currentPly = -1;
   board.position(game.fen());
-  currentMove = 0;
 });
 $('#btnPrevious').on('click', function() {
-  if (currentMove > 0) {
+  if (currentPly > 0) {
     game.undo();
+    currentPly--;
     board.position(game.fen());
-    currentMove--;
   }
 });
 $('#btnNext').on('click', function() {
-  if (currentMove < gameHistory.length) {
-    game.move(gameHistory[currentMove].san);
+  if (currentPly < gameHistory.length - 1) {
+    currentPly++;
+    game.move(gameHistory[currentPly].san);
     board.position(game.fen());
-    currentMove++;
   }
 });
 $('#btnEnd').on('click', function() {
-  while (currentMove < gameHistory.length) {
-    game.move(gameHistory[currentMove].san);
-    currentMove++;
+  while (currentPly < gameHistory.length - 1) {
+    currentPly++;
+    game.move(gameHistory[currentPly].san);
   }
   board.position(game.fen());
 });
 
 //key bindings
 $(document).ready(function(){
+
   $(document).keydown(function(e){
     if (e.keyCode == 39) { //right arrow
-      $('#btnNext').click();
-      return false;
+      if (e.ctrlKey) {
+        $('#btnEnd').click();
+        return false;
+      } else {
+        $('#btnNext').click();
+        return false;
+      }
     }
   });
+
   $(document).keydown(function(e){
     if (e.keyCode == 37) { //left arrow
-      $('#btnPrevious').click();
-      return false;
+      if (e.ctrlKey) {
+        $('#btnStart').click();
+        return false;
+      } else {
+        $('#btnPrevious').click();
+        return false;
+      }
     }
   });
+
 });
+
+var onChange = function onChange() { //fires when the board position changes
+  //highlight the current move
+  $("[class^='gameMove']").removeClass('highlight');
+  $('.gameMove' + currentPly).addClass('highlight');
+}
 
 //set up the board
 var cfg = {
   pieceTheme: '/chessboardjs/img/chesspieces/wikipedia/{piece}.png',
   position: 'start',
-  showNotation: false
+  showNotation: false,
+  onChange: onChange
 };
 board = new ChessBoard('board', cfg);
-// $(window).resize(board.resize);
+$(window).resize(board.resize);

@@ -17,3 +17,7 @@ p, div {
   float: left;
   margin-right: 4px;
 }
+
+.highlight {
+  background-color: #F3F315;
+}
