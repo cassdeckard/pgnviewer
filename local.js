@@ -133,11 +133,10 @@ $(document).ready(function(){
     if (e.keyCode == 39) { //right arrow
       if (e.ctrlKey) {
         $('#btnEnd').click();
-        return false;
       } else {
         $('#btnNext').click();
-        return false;
       }
+      return false;
     }
   });
 
@@ -145,12 +144,11 @@ $(document).ready(function(){
     if (e.keyCode == 37) { //left arrow
       if (e.ctrlKey) {
         $('#btnStart').click();
-        return false;
       } else {
         $('#btnPrevious').click();
-        return false;
       }
     }
+    return false;
   });
 
   $(document).keydown(function(e){
@@ -158,13 +156,13 @@ $(document).ready(function(){
       if (currentGame > 0) {
         if (e.ctrlKey) {
           loadGame(0);
-          return false;
         } else {
           loadGame(currentGame - 1);
-          return false;
         }
       }
+      $('#gameSelect').val(currentGame);
     }
+    return false;
   });
 
   $(document).keydown(function(e){
@@ -172,15 +170,14 @@ $(document).ready(function(){
       if (currentGame < pgnData.length - 1) {
         if (e.ctrlKey) {
           loadGame(pgnData.length - 1);
-          return false;
         } else {
           loadGame(currentGame + 1);
           console.log($('gameSelect').value);
-          //$('gameSelect').val((currentGame + 1).toString());
-          return false;
         }
       }
+      $('#gameSelect').val(currentGame);
     }
+    return false;
   });
 
 
@@ -217,20 +214,20 @@ function loadGame(i) {
   game.load_pgn(pgnData[i].join('\n'), {newline_char:'\n'});
   writeGameText(game);
   gameHistory = game.history({verbose: true});
-  goToMove(0);
+  goToMove(-1);
   currentGame = i;
 }
 
+//only need the headers here, raise issue on githb?
 //read all the games to populate the select
-// games = [];
 for (var i = 0; i < pgnData.length; i++) {
+  var g = new Chess();
+  g.load_pgn(pgnData[i].join('\n'), {newline_char:'\n'});
+  var h = g.header();
   $('#gameSelect')
      .append($('<option></option>')
      .attr('value', i)
-     .text('Game ' + i));
-  //c = new Chess();
-  //c.load_pgn(pgnData[i].join('\n'), {newline_char:'\n'});
-  //games.push(c);
+     .text(h.White + ' - ' + h.Black + ', ' + h.Event + ' ' + h.Site + ' ' + h.Date));
 }
 
 //set up the board
