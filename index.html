@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="CoffeeCup HTML Editor (www.coffeecup.com)">
+    <meta name="dcterms.created" content="Tue, 29 Oct 2013 23:53:06 GMT">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>chessboardjs + chess.js pgn viewer</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/chessboardjs/css/chessboard-0.3.0.min.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--[if IE]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>chessboardjs + chess.js pgn viewer</h1>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div id="board" style="width: 400px;"></div>
+          <div id="board-buttons">
+            <button type="button" class="btn btn-default" id="btnStart"><i class="fa fa-fast-backward fa-lg"></i></button>
+            <button type="button" class="btn btn-default" id="btnPrevious"><i class="fa fa-step-backward fa-lg"></i></button>
+            <button type="button" class="btn btn-default" id="btnNext"><i class="fa fa-step-forward fa-lg"></i></button>
+            <button type="button" class="btn btn-default" id="btnEnd"><i class="fa fa-fast-forward fa-lg"></i></button>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div id="game-data">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/chessboardjs/js/chessboard-0.3.0.min.js"></script>
+    <script src="/chessjs/chess.min.js"></script>
+    <script src="local.js"></script>
+  </body>
+</html>

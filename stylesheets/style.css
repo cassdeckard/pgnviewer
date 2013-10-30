@@ -1,0 +1,19 @@
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto Slab', Georgia, Times, serif;
+}
+
+p, div {
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+#board-buttons {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  overflow: auto;
+}
+
+#board-buttons button {
+  display: inline;
+  float: left;
+  margin-right: 4px;
+}
