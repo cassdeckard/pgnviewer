@@ -43,7 +43,7 @@ for (var i = 0, l = moveArray.length; i < l; ++i) {
   if (!/^[0-9]+\.$/.test(s)) { //move numbers
     m = s.split(/\s+/);
     for (var j = 0, ll = m.length; j < ll; ++j) {
-      m[j] = '<span class="gameMove' + (i + j - 1) + '">' + m[j] + '</span>';
+      m[j] = '<span class="gameMove' + (i + j - 1) + '"><a id="myLink" href="#" onclick="goToMove(' + (i + j - 1) + ');return false;">' + m[j] + '</a></span>';
     }
     s = m.join(' ');
   }
@@ -92,7 +92,9 @@ $(document).ready(function(){
         $('#btnEnd').click();
         return false;
       } else {
+        $('#btnNext').addClass('hover');
         $('#btnNext').click();
+        $('#btnNext').removeClass('hover');
         return false;
       }
     }
@@ -112,6 +114,20 @@ $(document).ready(function(){
 
 });
 
+//used for clickable moves in gametext
+//not used for buttons for efficiency
+
+//doesn't work when moving backwards through game?
+function goToMove(ply) {
+  if (ply > gameHistory.length - 1) ply = gameHistory.length - 1;
+  game.reset();
+  for (var i = 0; i <= ply; i++) {
+    game.move(gameHistory[i].san);
+  }
+  currentPly = i - 1;
+  board.position(game.fen());
+}
+
 var onChange = function onChange() { //fires when the board position changes
   //highlight the current move
   $("[class^='gameMove']").removeClass('highlight');
@@ -127,3 +143,5 @@ var cfg = {
 };
 board = new ChessBoard('board', cfg);
 $(window).resize(board.resize);
+
+//goToMove(12);
