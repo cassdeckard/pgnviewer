@@ -231,7 +231,7 @@ for (var i = 0; i < pgnData.length; i++) {
 
 //set up the board
 var cfg = {
-  pieceTheme: '/chessboardjs/img/chesspieces/wikipedia/{piece}.png',
+  pieceTheme: 'chessboardjs/img/chesspieces/wikipedia/{piece}.png',
   position: 'start',
   showNotation: false,
   onChange: onChange
